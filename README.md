@@ -1,2 +1,2 @@
 # rino
-A parser generator work-in-progress
+A parser generator work-in-progress in rust
