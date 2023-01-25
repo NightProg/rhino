@@ -48,8 +48,25 @@ impl<'a, T: Clone + 'static> Rule<'a, T> {
 
 }
 
+struct Prompt<'a, T> {
+    rule: Rule<'a, T>,
+    prompt: String
+}
+
+impl<'a, T> Prompt<'a, T> {
+    fn new(rule: Rule<'a, T>) -> Self {
+        Prompt {
+            rule,
+            prompt: String::new()
+        }
+    }
+}
+
 pub struct Group<'a, T>(Vec<Rule<'a, T>>);
 
+impl<'a, T> Group<'a, T> {
+
+}
 
 
 #[derive(Clone, PartialEq, Debug)]
@@ -70,7 +87,10 @@ pub fn just<'a, T>(s: String) -> Rule<'a, T> {
     }
 }
 
+
+
 pub fn any<'a, T>() -> Rule<'a, T> {
+
     Rule {
         check: Rc::new(|e| {
             true
