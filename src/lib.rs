@@ -1,4 +1,5 @@
 mod rules;
+mod macros;
 
 use std::fmt::Debug;
 use std::process::Output;
@@ -6,6 +7,7 @@ use std::rc::Rc;
 use rules::Rule;
 use rules::just::JustRule;
 use rules::any::AnyRule;
+use rules::between::BetweenRule;
 
 #[derive(Debug, PartialEq, Clone)]
 enum Ast {
@@ -32,5 +34,16 @@ mod tests {
         let mut d = AnyRule::new();
         <AnyRule as Rule<()>>::parse(&mut d, "hhh");
         assert_eq!(d.input(), Some(String::from("hhh")))
+    }
+
+    #[test]
+    fn test_between_rule() {
+        let mut d = BetweenRule::new(
+            Rc::new(JustRule::new("<", Rc::new(Ast::A))),
+            Rc::new(AnyRule::new()),
+            Rc::new(JustRule::new(">", Rc::new(Ast::B)))
+        );
+        assert!(d.check("<>"));
+        assert!(!d.check("a>"))
     }
 }

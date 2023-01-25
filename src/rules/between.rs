@@ -1,7 +1,7 @@
 use super::Rule;
 use std::rc::Rc;
 
-struct BetweenRule<T> {
+pub struct BetweenRule<T> {
     start_by: Rc<dyn Rule<T>>,
     end_by: Rc<dyn Rule<T>>,
     body: Rc<dyn Rule<T>>,
@@ -9,7 +9,7 @@ struct BetweenRule<T> {
 }
 
 impl<T> BetweenRule<T> {
-    fn new(start_by: Rc<dyn Rule<T>>, body: Rc<dyn Rule<T>>, end_by: Rc<dyn Rule<T>>) -> BetweenRule<T> {
+    pub fn new(start_by: Rc<dyn Rule<T>>, body: Rc<dyn Rule<T>>, end_by: Rc<dyn Rule<T>>) -> BetweenRule<T> {
         BetweenRule {
             start_by,
             body,
@@ -21,7 +21,23 @@ impl<T> BetweenRule<T> {
 
 impl<T> Rule<T> for BetweenRule<T> {
     fn check(&self, input: &str) -> bool {
-        todo!()
+        self.start_by.check(
+            input
+                .chars()
+                .nth(0)
+                .unwrap()
+                .to_string()
+                .as_str()
+        ) &&
+            self.end_by.check(input
+                .chars()
+                .last()
+                .unwrap()
+                .to_string()
+                .as_str()
+            ) &&
+            self.body.check(&input[1..input.len()-1])
+
     }
 
     fn parse(&mut self, input: &str) -> Option<T> {
